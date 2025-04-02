@@ -6,17 +6,15 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y git
 
 # Clone the BTCPayServer repo
-RUN git clone --depth=1 https://github.com/btcpayserver/btcpayserver.git .
+RUN git clone --depth=1 https://github.com/btcpayserver/btcpayserver.git /app/btcpayserver
 
-# Install Node.js (needed for UI assets)
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs
+# Move into the correct directory where the solution file is located
+WORKDIR /app/btcpayserver
 
 # Restore and build BTCPayServer
-WORKDIR /app/btcpayserver
-RUN dotnet restore
-RUN dotnet build -c Release
-RUN dotnet publish -c Release -o out
+RUN dotnet restore BTCPayServer.sln
+RUN dotnet build BTCPayServer.sln -c Release
+RUN dotnet publish BTCPayServer.sln -c Release -o out
 
 # Use the official ASP.NET Core runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
@@ -30,4 +28,3 @@ EXPOSE 23000
 
 # Run the server
 ENTRYPOINT ["dotnet", "BTCPayServer.dll"]
-
