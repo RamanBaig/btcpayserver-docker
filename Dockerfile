@@ -8,13 +8,13 @@ RUN apt-get update && apt-get install -y git
 # Clone the BTCPayServer repo
 RUN git clone --depth=1 https://github.com/btcpayserver/btcpayserver.git /app/btcpayserver
 
-# Move into the correct directory where the solution file is located
+# Move into the correct directory
 WORKDIR /app/btcpayserver
 
-# Restore and build BTCPayServer
-RUN dotnet restore BTCPayServer.sln
-RUN dotnet build BTCPayServer.sln -c Release
-RUN dotnet publish BTCPayServer.sln -c Release -o out
+# Check for the correct project file (use .csproj if .sln is missing)
+RUN dotnet restore src/BTCPayServer/BTCPayServer.csproj
+RUN dotnet build src/BTCPayServer/BTCPayServer.csproj -c Release
+RUN dotnet publish src/BTCPayServer/BTCPayServer.csproj -c Release -o out
 
 # Use the official ASP.NET Core runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
