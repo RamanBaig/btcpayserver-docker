@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: btcpayserver
+    env: docker
+    plan: free
+    repo: https://github.com/RamanBaig/btcpayserver-render
+    region: oregon
+    envVars:
+      - key: BTCPAY_HOST
+        value: https://azen-btcpay-temporary.onrender.com
+      - key: NBITCOIN_NETWORK
+        value: mainnet
+      - key: BTCPAYGEN_CRYPTO1
+        value: btc
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
